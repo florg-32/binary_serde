@@ -48,7 +48,7 @@ pub fn derive_binary_serde(input_tokens: proc_macro::TokenStream) -> proc_macro:
                 serialized_size: repr_type.serialized_size(),
                 recursive_array_type: repr_type.serialized_recursive_array_type(),
                 serialization_code: quote! {
-                    let as_primitive: &#repr_type = unsafe { ::core::mem::transmute(self) };
+                    let as_primitive: &#repr_type = unsafe { &*(self as *const Self as *const _) };
                     ::binary_serde::BinarySerde::binary_serialize(as_primitive, buf, endianness)
                 },
                 deserialization_code: gen_enum_deserialization_code(
